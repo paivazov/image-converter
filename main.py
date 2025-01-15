@@ -1,17 +1,30 @@
-from PIL import Image
-from fastapi import FastAPI, UploadFile, File
+from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import FileResponse
+from pathlib import Path
 
-from utils import create_filename_path
+from utils import create_filename_path, save_image
 
 app = FastAPI()
 
 
 @app.post("/convert")
-def convert_image(output_format: str, image: UploadFile = File()):
-    with Image.open(image.file) as logo:
-        image_data = create_filename_path(image.filename, output_format)
-        headers = {'Content-Disposition': f'attachment; filename="{image_data["name"]}"'}
-        full_path = image_data["full_path"]
-        logo.convert('RGB').save(full_path, format=output_format)
+async def convert_image(output_format: str, image: UploadFile = File()):
+    """
+    Async endpoint for converting an image to a specified format.
+    """
+    # Creating a directory for saving if it's not exist yet.
+    converted_images_dir = Path("converted_images")
+    converted_images_dir.mkdir(parents=True, exist_ok=True)
+
+    # Reading image data
+    image_data = await image.read()
+
+    # Генерируем имя файла и путь
+    file_info = create_filename_path(image.filename, output_format)
+    full_path = file_info["full_path"]
+
+    # Asynchronously image save.
+    await save_image(image_data, output_format, full_path)
+
+    headers = {'Content-Disposition': f'attachment; filename="{file_info["name"]}"'}
     return FileResponse(full_path, headers=headers)
