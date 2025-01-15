@@ -2,7 +2,6 @@ import asyncio
 import io
 import os
 import re
-import time
 import uuid
 
 from PIL import Image
@@ -20,8 +19,8 @@ def _save_image(image_data: bytes, output_format: str, full_path: str):
     Sync image conversion and saving.
     """
     with Image.open(io.BytesIO(image_data)) as logo:
-        time.sleep(2)
         logo.convert("RGB").save(full_path, format=output_format)
+
 
 def create_filename_path(image_name: str, output_format: str) -> dict:
     """
