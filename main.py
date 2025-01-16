@@ -2,13 +2,14 @@ from PIL import Image
 from fastapi import FastAPI, UploadFile, File
 from fastapi.responses import FileResponse
 
-from utils import create_filename_path
+from utils import create_filename_path, create_save_dir
 
 app = FastAPI()
 
 
 @app.post("/convert")
 def convert_image(output_format: str, image: UploadFile = File()):
+    create_save_dir()
     with Image.open(image.file) as logo:
         image_data = create_filename_path(image.filename, output_format)
         headers = {'Content-Disposition': f'attachment; filename="{image_data["name"]}"'}
