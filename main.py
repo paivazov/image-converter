@@ -1,8 +1,7 @@
 from fastapi import FastAPI, File, UploadFile
 from fastapi.responses import FileResponse
-from pathlib import Path
 
-from utils import create_filename_path, async_save_image
+from utils import create_filename_path, async_save_image, create_save_dir
 
 app = FastAPI()
 
@@ -12,9 +11,7 @@ async def convert_image(output_format: str, image: UploadFile = File()):
     """
     Async endpoint for converting an image to a specified format.
     """
-    # Creating a directory for saving if it's not exist yet.
-    converted_images_dir = Path("converted_images")
-    converted_images_dir.mkdir(parents=True, exist_ok=True)
+    create_save_dir()
 
     # Reading image data
     image_data = await image.read()
