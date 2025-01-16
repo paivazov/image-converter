@@ -15,6 +15,8 @@ def create_filename_path(image_name: str, output_format: str) -> dict:
 
 
 def create_save_dir():
-    """Creating a directory for saving if it's not exist yet."""
+    """
+    Creating a directory for saving if it's not exist yet.
+    """
     converted_images_dir = Path("converted_images")
     converted_images_dir.mkdir(parents=True, exist_ok=True)
