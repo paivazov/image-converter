@@ -7,14 +7,14 @@ import uuid
 from PIL import Image
 
 
-async def save_image(image_data: bytes, output_format: str, full_path: str):
+async def async_save_image(image_data: bytes, output_format: str, full_path: str):
     """
     Emulation of async image conversion saving by executing a synchronous operation in a separate thread.
     """
-    await asyncio.to_thread(_save_image, image_data, output_format, full_path)
+    await asyncio.to_thread(save_image, image_data, output_format, full_path)
 
 
-def _save_image(image_data: bytes, output_format: str, full_path: str):
+def save_image(image_data: bytes, output_format: str, full_path: str):
     """
     Sync image conversion and saving.
     """
